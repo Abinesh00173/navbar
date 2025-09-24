@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Navbar</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sansation:wght@300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        * {
+            text-decoration: none;
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            background: #faf9f6;
+            font-family: 'Sansation', sans-serif;
+            font-weight: 300;
+            font-style: normal;
+        }
+
+        #head {
+            margin-top: 10px;
+        }
+
+        /* Header Styling */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 4px 30px;
+            background-color: #faf9f6;
+            width: 100%;
+            position: relative;
+            z-index: 10;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .menu-btn {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding-right: 50px;
+        }
+
+        .menu-btn .bar {
+            display: block;
+            width: 32px;
+            height: 1px;
+            background: #222;
+            border-radius: 2px;
+            transition: transform 0.4s, opacity 0.4s;
+        }
+
+        .menu-btn.active .bar:nth-child(1) {
+            transform: translateY(11px) rotate(55deg);
+        }
+
+        .menu-btn.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .menu-btn.active .bar:nth-child(3) {
+            transform: translateY(-11px) rotate(-55deg);
+        }
+
+        #hello {
+            font-size: 30px;
+            font-weight: bold;
+            margin: 0;
+            padding-left: 100px;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 80px;
+        }
+
+        .header-right span {
+            cursor: pointer;
+        }
+
+        #openSearch {
+            transform: translateX(18px);
+            border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+            padding-bottom: 5px;
+            display: inline-block;
+            width: 150px;
+            position: relative;
+            cursor: pointer;
+        }
+
+        /* Custom Dropdown Styling */
+        .dropdown {
+            position: relative;
+            display: block;
+            cursor: pointer;
+        }
+
+        .dropdown-content {
+            display: none;
+            background-color: #faf9f6;
+            padding-left: 15px;
+            transition: max-height 0.3s ease;
+        }
+
+        .dropdown.active .dropdown-content {
+            display: block;
+            /* No max-height to allow natural expansion */
+        }
+
+        .dropdown-content a {
+            color: #333;
+            padding: 10px 0;
+            text-decoration: none;
+            display: block;
+        }
+
+        .dropdown-content a:hover {color: #000}
+
+        .dropdown .arrow {
+            font-family: "Font Awesome 6 Free";
+            font-weight: 900;
+            padding: 10px 0px;
+            font-size: 12px;
+            transition: transform 0.3s ease;
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .dropdown.active .arrow {
+            transform: rotate(-90deg);
+        }
+
+        /* Tablet View Adjustments */
+        @media (min-width: 768px) and (max-width: 1024px) {
+            header {
+                padding: 4px 20px;
+            }
+
+            .header-left {
+                gap: 12px;
+            }
+
+            #hello {
+                font-size: 28px;
+                padding-left: 80px;
+            }
+
+            .header-right {
+                gap: 40px;
+                flex-direction: row;
+                align-items: center;
+            }
+
+            #openSearch {
+                width: 120px;
+                transform: translateX(10px);
+                display: inline-block;
+            }
+
+            #navMenu {
+                max-height: none;
+                opacity: 1;
+                flex-direction: row;
+                align-items: center;
+                width: auto;
+                padding: 0;
+                background: none;
+                border-top: none;
+                overflow: visible;
+            }
+
+            #navMenu > p.search-trigger,
+            #navMenu > span {
+                display: inline-block;
+                width: auto;
+                text-align: center;
+                font-size: 16px;
+                padding: 5px 0;
+                border-bottom: none;
+            }
+
+            .menu-btn {
+                display: flex;
+                padding-right: 30px;
+            }
+        }
+
+        /* Mobile View */
+        @media (max-width: 767px) {
+            #navMenu {
+                max-height: 0;
+                opacity: 0;
+                overflow: hidden;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                gap: 15px;
+                padding: 0 15px;
+                background: #faf9f6;
+                border-top: 1px solid #ddd;
+                transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.3s ease;
+            }
+
+            #navMenu.show {
+                max-height: 500px;
+                opacity: 1;
+                padding: 15px;
+            }
+
+            #navMenu > p.search-trigger,
+            #navMenu > span {
+                display: block;
+                width: 100%;
+                text-align: left;
+                font-size: 16px;
+                cursor: pointer;
+                padding: 10px 0;
+                border-bottom: 1px solid #eee;
+            }
+
+            #openSearch {
+                margin: 0;
+                transform: none;
+            }
+
+            .menu-btn {
+                display: flex;
+            }
+
+            .header-left {
+                gap: 10px;
+            }
+
+            #hello {
+                font-size: 26px;
+                padding-left: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            header {
+                flex-direction: column;
+                align-items: flex-start;
+                text-align: left;
+                padding: 4px 10px;
+            }
+
+            .header-left {
+                width: 100%;
+                justify-content: flex-start;
+                gap: 10px;
+                padding-left: 0;
+            }
+
+            #hello {
+                font-size: 24px;
+                padding-left: 10px;
+                margin-top: 8px;
+            }
+            
+        }
+
+        /* Slide-out Menu Styling */
+        .slide-menu {
+            position: fixed;
+            top: 0;
+            left: -360px;
+            width: 300px;
+            height: 100%;
+            background: #faf9f6;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            transition: left 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            overflow-y: auto;
+        }
+
+        .slide-menu.show {
+            left: 0;
+        }
+
+        .slide-menu h2 {
+            font-size: 35px;
+            font-weight: bold;
+            margin-top: 45px;
+            text-align: center;
+            margin-bottom: 35px;
+        }
+
+        .slide-menu a {
+            color: #333;
+            text-decoration: none;
+            font-size: 20px;
+            padding: 10px 0;
+            display: block;
+            margin-left: 15px;
+        }
+
+        .slide-menu a:hover {
+            color: #000;
+        }
+
+        .slide-menu .close-btn {
+            position: absolute;
+            top: 5px;
+            left: 10px;
+            font-size: 30px;
+            cursor: pointer;
+            color: #775b5b;
+        }
+
+        /* Custom Scrollbar Styling (Applied Universally) */
+        .slide-menu {
+            scrollbar-width: thin; /* Thin scrollbar for Firefox */
+            scrollbar-color: #888 #ddd; /* Thumb and track colors for Firefox */
+        }
+
+        .slide-menu::-webkit-scrollbar {
+            width: 8px; /* Scrollbar width for WebKit browsers */
+        }
+
+        .slide-menu::-webkit-scrollbar-track {
+            background: #ddd; /* Track color */
+        }
+
+        .slide-menu::-webkit-scrollbar-thumb {
+            background: #888; /* Thumb color */
+            border-radius: 4px; /* Rounded edges */
+        }
+
+        .slide-menu::-webkit-scrollbar-thumb:hover {
+            background: #666; /* Darker thumb on hover */
+        }
+    </style>
+</head>
+<body>
+    <section id="head">
+        <header>
+            <div class="header-left">
+                <div class="menu">
+                    <button id="menu-btn" class="menu-btn">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </button>
+                </div>
+                <h1 id="hello">ZYRAA</h1>
+            </div>
+            <div class="header-right" id="navMenu">
+                <p id="openSearch" class="search-trigger">Search</p>
+                <span>Login</span>
+                <span>Add to collection</span>
+            </div>
+        </header>
+    </section>
+
+    <!-- Slide-out Menu -->
+    <div class="slide-menu" id="slideMenu">
+        <span class="close-btn" id="closeMenu">&#10005</span>
+        <h2>Zyraa</h2>
+        <div class="dropdown">
+            <a onclick="toggleDropdown(this.parentElement)">change account <span class="arrow"><i class="fas fa-angle-down"></i></span></a>
+            <div class="dropdown-content">
+                <a href="#">bendi2345@gmail.com</a>
+                <a href="#">bendi4523@gmail.com</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <a onclick="toggleDropdown(this.parentElement)">language <span class="arrow"><i class="fas fa-angle-down"></i></span></a>
+            <div class="dropdown-content">
+                <a href="#">English</a>
+                <a href="#">Spanish</a>
+                <a href="#">French</a>
+                <a href="#">German</a>
+                <a href="#">Hindi</a>
+                <a href="#">Chinese (Simplified)</a>
+                <a href="#">Japanese</a>
+                <a href="#">Arabic</a>
+                <a href="#">Portuguese</a>
+                <a href="#">Russian</a>
+            </div>
+        </div>
+        <a href="#">updates</a>
+        <a href="#">your orders</a>
+        <a href="#">customer service</a>
+        <a href="#">change address</a>
+        <a href="#">settings</a>
+    </div>
+
+    <script>
+        // Toggle slide-menu and menu button
+        document.getElementById('menu-btn').addEventListener('click', function () {
+            this.classList.toggle('active');
+            document.getElementById('navMenu').classList.toggle('show');
+            document.getElementById('slideMenu').classList.toggle('show');
+        });
+
+        // Navigate to search page
+        document.getElementById("openSearch").addEventListener("click", function() {
+            window.location.href = "search.html";
+        });
+
+        // Handle nav menu item clicks for mobile
+        document.querySelectorAll('#navMenu > span, #navMenu > p').forEach(item => {
+            item.addEventListener('click', () => {
+                if (window.innerWidth <= 767) {
+                    document.getElementById('navMenu').classList.remove('show');
+                    document.getElementById('menu-btn').classList.remove('active');
+                }
+            });
+        });
+
+        // Close slide-menu with close button
+        document.getElementById('closeMenu').addEventListener('click', function () {
+            document.getElementById('slideMenu').classList.remove('show');
+            document.getElementById('menu-btn').classList.remove('active');
+            document.getElementById('navMenu').classList.remove('show');
+        });
+
+        // Toggle dropdowns
+        function toggleDropdown(element) {
+            element.classList.toggle('active');
+            // Close other dropdowns if open
+            document.querySelectorAll('.slide-menu .dropdown').forEach(otherDropdown => {
+                if (otherDropdown !== element) {
+                    otherDropdown.classList.remove('active');
+                }
+            });
+        }
+
+        // Handle clicks outside
+        document.addEventListener('click', function(event) {
+            const slideMenu = document.getElementById('slideMenu');
+            const dropdowns = document.querySelectorAll('.slide-menu .dropdown');
+            const menuBtn = document.getElementById('menu-btn');
+
+            if (slideMenu.classList.contains('show')) {
+                // Close dropdowns if click is outside them
+                dropdowns.forEach(dropdown => {
+                    if (dropdown.classList.contains('active') && !dropdown.contains(event.target)) {
+                        dropdown.classList.remove('active');
+                    }
+                });
+                // Close slide-menu if click is outside it
+                if (!slideMenu.contains(event.target) && !menuBtn.contains(event.target)) {
+                    slideMenu.classList.remove('show');
+                    menuBtn.classList.remove('active');
+                    document.getElementById('navMenu').classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
