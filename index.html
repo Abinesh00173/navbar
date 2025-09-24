@@ -119,7 +119,6 @@
 
         .dropdown.active .dropdown-content {
             display: block;
-            /* No max-height to allow natural expansion */
         }
 
         .dropdown-content a {
@@ -172,70 +171,27 @@
                 display: inline-block;
             }
 
-            #navMenu {
-                max-height: none;
-                opacity: 1;
-                flex-direction: row;
-                align-items: center;
-                width: auto;
-                padding: 0;
-                background: none;
-                border-top: none;
-                overflow: visible;
-            }
-
-            #navMenu > p.search-trigger,
-            #navMenu > span {
-                display: inline-block;
-                width: auto;
-                text-align: center;
-                font-size: 16px;
-                padding: 5px 0;
-                border-bottom: none;
-            }
-
             .menu-btn {
                 display: flex;
                 padding-right: 30px;
+            }
+
+            .mobile-nav {
+                display: none; /* Hide mobile nav items in tablet view */
+            }
+        }
+
+        /* Desktop View Adjustments */
+        @media (min-width: 1025px) {
+            .mobile-nav {
+                display: none; /* Hide mobile nav items in desktop view */
             }
         }
 
         /* Mobile View */
         @media (max-width: 767px) {
-            #navMenu {
-                max-height: 0;
-                opacity: 0;
-                overflow: hidden;
-                flex-direction: column;
-                align-items: flex-start;
-                width: 100%;
-                gap: 15px;
-                padding: 0 15px;
-                background: #faf9f6;
-                border-top: 1px solid #ddd;
-                transition: max-height 0.4s ease, opacity 0.4s ease, padding 0.3s ease;
-            }
-
-            #navMenu.show {
-                max-height: 500px;
-                opacity: 1;
-                padding: 15px;
-            }
-
-            #navMenu > p.search-trigger,
-            #navMenu > span {
-                display: block;
-                width: 100%;
-                text-align: left;
-                font-size: 16px;
-                cursor: pointer;
-                padding: 10px 0;
-                border-bottom: 1px solid #eee;
-            }
-
-            #openSearch {
-                margin: 0;
-                transform: none;
+            .header-right {
+                display: none; /* Hide header-right in mobile view */
             }
 
             .menu-btn {
@@ -249,6 +205,35 @@
             #hello {
                 font-size: 26px;
                 padding-left: 20px;
+            }
+
+            /* Style for nav items in slide-menu for mobile */
+            .slide-menu-nav {
+                display: block;
+                width: 100%;
+                text-align: left;
+                font-size: 20px;
+                cursor: pointer;
+                padding: 10px 0;
+                margin: 0 0 0 15px; /* Match slide-menu <a> alignment */
+                color: #333;
+                text-decoration: none;
+                line-height: 1.5; /* Match line-height of slide-menu <a> */
+            }
+
+            .slide-menu-nav:hover {
+                color: #000;
+            }
+
+            #openSearchMobile.slide-menu-nav {
+                margin: 0 0 0 15px; /* Ensure consistent margin */
+                transform: none;
+                border-bottom: none;
+                width: auto;
+            }
+
+            .mobile-nav {
+                display: block !important; /* Ensure mobile nav items show in mobile view */
             }
         }
 
@@ -272,7 +257,6 @@
                 padding-left: 10px;
                 margin-top: 8px;
             }
-            
         }
 
         /* Slide-out Menu Styling */
@@ -290,7 +274,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            overflow-y: auto; /* Allow scrolling when content overflows */
+            overflow-y: auto;
         }
 
         .slide-menu.show {
@@ -311,7 +295,8 @@
             font-size: 20px;
             padding: 10px 0;
             display: block;
-            margin-left: 15px;
+            margin: 0 0 0 15px;
+            line-height: 1.5;
         }
 
         .slide-menu a:hover {
@@ -329,13 +314,18 @@
 
         /* Hide Scrollbar but Keep Scrolling Functionality */
         .slide-menu {
-            scrollbar-width: none; /* Hide scrollbar for Firefox */
-            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
 
         .slide-menu::-webkit-scrollbar {
-            width: 0; /* Hide scrollbar for WebKit browsers */
-            height: 0; /* Ensure horizontal scrollbar is also hidden */
+            width: 0;
+            height: 0;
+        }
+
+        /* Default state for mobile-nav */
+        .mobile-nav {
+            display: none;
         }
     </style>
 </head>
@@ -364,6 +354,9 @@
     <div class="slide-menu" id="slideMenu">
         <span class="close-btn" id="closeMenu">&#10005</span>
         <h2>Zyraa</h2>
+        <p id="openSearchMobile" class="slide-menu-nav mobile-nav">Search</p>
+        <span class="slide-menu-nav mobile-nav">Login</span>
+        <span class="slide-menu-nav mobile-nav">Add to collection</span>
         <div class="dropdown">
             <a onclick="toggleDropdown(this.parentElement)">change account <span class="arrow"><i class="fas fa-angle-down"></i></span></a>
             <div class="dropdown-content">
@@ -397,20 +390,26 @@
         // Toggle slide-menu and menu button
         document.getElementById('menu-btn').addEventListener('click', function () {
             this.classList.toggle('active');
-            document.getElementById('navMenu').classList.toggle('show');
             document.getElementById('slideMenu').classList.toggle('show');
         });
 
-        // Navigate to search page
+        // Navigate to search page from header (tablet/desktop)
         document.getElementById("openSearch").addEventListener("click", function() {
             window.location.href = "search.html";
         });
 
-        // Handle nav menu item clicks for mobile
-        document.querySelectorAll('#navMenu > span, #navMenu > p').forEach(item => {
+        // Navigate to search page from slide-menu (mobile)
+        document.getElementById("openSearchMobile").addEventListener("click", function() {
+            window.location.href = "search.html";
+            document.getElementById('slideMenu').classList.remove('show');
+            document.getElementById('menu-btn').classList.remove('active');
+        });
+
+        // Handle nav menu item clicks in slide-menu for mobile
+        document.querySelectorAll('.slide-menu-nav').forEach(item => {
             item.addEventListener('click', () => {
                 if (window.innerWidth <= 767) {
-                    document.getElementById('navMenu').classList.remove('show');
+                    document.getElementById('slideMenu').classList.remove('show');
                     document.getElementById('menu-btn').classList.remove('active');
                 }
             });
@@ -420,13 +419,11 @@
         document.getElementById('closeMenu').addEventListener('click', function () {
             document.getElementById('slideMenu').classList.remove('show');
             document.getElementById('menu-btn').classList.remove('active');
-            document.getElementById('navMenu').classList.remove('show');
         });
 
         // Toggle dropdowns
         function toggleDropdown(element) {
             element.classList.toggle('active');
-            // Close other dropdowns if open
             document.querySelectorAll('.slide-menu .dropdown').forEach(otherDropdown => {
                 if (otherDropdown !== element) {
                     otherDropdown.classList.remove('active');
@@ -441,17 +438,14 @@
             const menuBtn = document.getElementById('menu-btn');
 
             if (slideMenu.classList.contains('show')) {
-                // Close dropdowns if click is outside them
                 dropdowns.forEach(dropdown => {
                     if (dropdown.classList.contains('active') && !dropdown.contains(event.target)) {
                         dropdown.classList.remove('active');
                     }
                 });
-                // Close slide-menu if click is outside it
                 if (!slideMenu.contains(event.target) && !menuBtn.contains(event.target)) {
                     slideMenu.classList.remove('show');
                     menuBtn.classList.remove('active');
-                    document.getElementById('navMenu').classList.remove('show');
                 }
             }
         });
