@@ -290,7 +290,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
-            overflow-y: auto;
+            overflow-y: auto; /* Allow scrolling when content overflows */
         }
 
         .slide-menu.show {
@@ -327,27 +327,15 @@
             color: #775b5b;
         }
 
-        /* Custom Scrollbar Styling (Applied Universally) */
+        /* Hide Scrollbar but Keep Scrolling Functionality */
         .slide-menu {
-            scrollbar-width: thin; /* Thin scrollbar for Firefox */
-            scrollbar-color: #888 #ddd; /* Thumb and track colors for Firefox */
+            scrollbar-width: none; /* Hide scrollbar for Firefox */
+            -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
         }
 
         .slide-menu::-webkit-scrollbar {
-            width: 8px; /* Scrollbar width for WebKit browsers */
-        }
-
-        .slide-menu::-webkit-scrollbar-track {
-            background: #ddd; /* Track color */
-        }
-
-        .slide-menu::-webkit-scrollbar-thumb {
-            background: #888; /* Thumb color */
-            border-radius: 4px; /* Rounded edges */
-        }
-
-        .slide-menu::-webkit-scrollbar-thumb:hover {
-            background: #666; /* Darker thumb on hover */
+            width: 0; /* Hide scrollbar for WebKit browsers */
+            height: 0; /* Ensure horizontal scrollbar is also hidden */
         }
     </style>
 </head>
